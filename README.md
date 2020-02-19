@@ -133,7 +133,7 @@ Please, read our [whitepaper](./docs/cyberd.md)
 
 ## cyberd Public Testnets
 
-To run a full-node or a validator node, on the latest public testnet of cyberd, please follow [this guide](./docs/help/run_validator.md).
+To run a full-node or a validator node, on the latest public testnet of cyberd, please follow [this guide](https://cybercongress.ai/docs/cyberd/run_validator/).
 
 ## Explorers
 
