@@ -159,9 +159,9 @@ func NewDefaultGenesisState() GenesisState {
 				VotingPeriod: 7200 * time.Second, // 2 hours
 			},
 			TallyParams: gov.TallyParams{
-				Quorum:    sdk.NewDecWithPrec(334, 3),
-				Threshold: sdk.NewDecWithPrec(5, 1),
-				Veto:      sdk.NewDecWithPrec(334, 3),
+				Quorum:    sdk.NewDecWithPrec(15, 2),
+				Threshold: sdk.NewDecWithPrec(15, 2),
+				Veto:      sdk.NewDecWithPrec(15, 2),
 			},
 		},
 		BandwidthData: bandwidth.GenesisState{
