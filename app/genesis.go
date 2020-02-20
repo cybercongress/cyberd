@@ -15,6 +15,7 @@ import (
 	distr "github.com/cosmos/cosmos-sdk/x/distribution"
 	"github.com/cosmos/cosmos-sdk/x/evidence"
 	"github.com/cosmos/cosmos-sdk/x/genutil"
+	"github.com/cosmwasm/wasmd/x/wasm"
 
 	"github.com/cosmos/cosmos-sdk/x/gov"
 	"github.com/cosmos/cosmos-sdk/x/mint"
@@ -51,6 +52,7 @@ type GenesisState struct {
 	GenUtil       genutil.GenesisState      `json:"genutil"`
 	Crisis        crisis.GenesisState       `json:"crisis"`
 	Evidence      evidence.GenesisState		`json:"evidence"`
+	WasmData      wasm.GenesisState         `json:"wasm"`
 }
 
 func (gs *GenesisState) GetAddresses() []sdk.AccAddress {
@@ -67,7 +69,8 @@ func NewGenesisState(
 	mintData mint.GenesisState, distrData distr.GenesisState,
 	govData gov.GenesisState, supplyData supply.GenesisState,
 	slashingData slashing.GenesisState, bandwidthData bandwidth.GenesisState,
-	rankData rank.GenesisState, crisisData crisis.GenesisState, evidenceData evidence.GenesisState,
+	rankData rank.GenesisState, crisisData crisis.GenesisState,
+	evidenceData evidence.GenesisState, wasmData wasm.GenesisState,
 ) GenesisState {
 
 	return GenesisState{
@@ -83,6 +86,7 @@ func NewGenesisState(
 		RankData:      rankData,
 		Crisis:        crisisData,
 		Evidence: 	   evidenceData,
+		WasmData:      wasmData,
 	}
 }
 

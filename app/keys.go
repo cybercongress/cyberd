@@ -13,6 +13,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/supply"
 	"github.com/cosmos/cosmos-sdk/x/upgrade"
 	"github.com/cosmos/cosmos-sdk/x/evidence"
+	"github.com/cosmwasm/wasmd/x/wasm"
 )
 
 type cyberdAppDbKeys struct {
@@ -34,6 +35,8 @@ type cyberdAppDbKeys struct {
 	rank           *sdk.KVStoreKey
 	accBandwidth   *sdk.KVStoreKey
 	blockBandwidth *sdk.KVStoreKey
+
+	wasm 		   *sdk.KVStoreKey
 
 	tStake         *sdk.TransientStoreKey
 	tParams        *sdk.TransientStoreKey
@@ -60,6 +63,8 @@ func NewCyberdAppDbKeys() cyberdAppDbKeys {
 		accBandwidth:   sdk.NewKVStoreKey("acc_bandwidth"),
 		blockBandwidth: sdk.NewKVStoreKey("block_spent_bandwidth"),
 
+		wasm:			sdk.NewKVStoreKey(wasm.StoreKey),
+
 		tStake:   sdk.NewTransientStoreKey(staking.TStoreKey),
 		tParams:  sdk.NewTransientStoreKey(params.TStoreKey),
 	}
@@ -68,7 +73,7 @@ func NewCyberdAppDbKeys() cyberdAppDbKeys {
 func (k cyberdAppDbKeys) GetStoreKeys() []*sdk.KVStoreKey {
 	return []*sdk.KVStoreKey{
 		k.main, k.auth, k.cidNum, k.cidNumReverse, k.links, k.rank, k.stake, k.supply, k.gov,
-		k.slashing, k.params, k.distr, k.accBandwidth, k.blockBandwidth, k.mint, k.upgrade, k.evidence,
+		k.slashing, k.params, k.distr, k.accBandwidth, k.blockBandwidth, k.mint, k.upgrade, k.evidence, k.wasm,
 	}
 }
 

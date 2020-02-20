@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"path/filepath"
 	"sort"
 	"time"
 
@@ -27,11 +28,15 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/supply"
 	"github.com/cosmos/cosmos-sdk/x/upgrade"
 	upgradeclient "github.com/cosmos/cosmos-sdk/x/upgrade/client"
+	"github.com/spf13/viper"
 	abci "github.com/tendermint/tendermint/abci/types"
 	"github.com/tendermint/tendermint/abci/version"
+	"github.com/tendermint/tendermint/libs/cli"
 	"github.com/tendermint/tendermint/libs/log"
 	tmos "github.com/tendermint/tendermint/libs/os"
 	dbm "github.com/tendermint/tm-db"
+
+	"github.com/cosmwasm/wasmd/x/wasm"
 
 	"github.com/cybercongress/cyberd/store"
 	"github.com/cybercongress/cyberd/types"
@@ -69,6 +74,7 @@ var (
 		link.AppModuleBasic{},
 		bandwidth.AppModuleBasic{},
 		rank.AppModuleBasic{},
+		wasm.AppModuleBasic{},
 	)
 
 	maccPerms = map[string][]string{
@@ -118,6 +124,8 @@ type CyberdApp struct {
 	cidNumKeeper           link.CidNumberKeeper
 	stakingIndexKeeper     cyberbank.IndexedKeeper
 	rankStateKeeper        rank.StateKeeper
+
+	wasmKeeper     		   wasm.Keeper
 
 	latestBlockHeight int64
 
@@ -192,6 +200,13 @@ func NewCyberdApp(logger log.Logger, db dbm.DB, traceStore io.Writer, loadLatest
 		app.subspaces[crisis.ModuleName], invCheckPeriod, app.supplyKeeper, auth.FeeCollectorName,
 	)
 	app.upgradeKeeper = upgrade.NewKeeper(skipUpgradeHeights, dbKeys.upgrade, app.cdc)
+
+	var wasmRouter = baseApp.Router()
+	homeDir := viper.GetString(cli.HomeFlag)
+	wasmDir := filepath.Join(homeDir, "wasm")
+
+	app.wasmKeeper = wasm.NewKeeper(app.cdc, dbKeys.wasm, app.accountKeeper, app.bankKeeper, wasmRouter, wasmDir, wasm.DefaultWasmConfig())
+
 	evidenceKeeper := evidence.NewKeeper(
 		app.cdc, dbKeys.evidence, app.subspaces[evidence.ModuleName], &stakingKeeper, app.slashingKeeper,
 	)
@@ -251,15 +266,17 @@ func NewCyberdApp(logger log.Logger, db dbm.DB, traceStore io.Writer, loadLatest
 		bandwidth.NewAppModule(app.accountBandwidthKeeper, app.blockBandwidthKeeper),
 		link.NewAppModule(app.cidNumKeeper, app.linkIndexedKeeper, app.accountKeeper),
 		rank.NewAppModule(app.rankStateKeeper),
+		wasm.NewAppModule(app.wasmKeeper),
 	)
 
 	app.mm.RegisterInvariants(&app.crisisKeeper)
 	app.mm.RegisterRoutes(app.Router(), app.QueryRouter())
 
 	app.MountStores(
-		dbKeys.main, dbKeys.auth, dbKeys.cidNum, dbKeys.cidNumReverse, dbKeys.links, dbKeys.rank, dbKeys.stake,
-		dbKeys.slashing, dbKeys.gov, dbKeys.params, dbKeys.distr, dbKeys.accBandwidth,
-		dbKeys.blockBandwidth, dbKeys.tParams, dbKeys.tStake, dbKeys.mint, dbKeys.supply, dbKeys.upgrade, dbKeys.evidence,
+		dbKeys.main, dbKeys.auth, dbKeys.cidNum, dbKeys.cidNumReverse, dbKeys.links,
+		dbKeys.rank, dbKeys.stake, dbKeys.slashing, dbKeys.gov, dbKeys.params,
+		dbKeys.distr, dbKeys.accBandwidth, dbKeys.blockBandwidth, dbKeys.tParams,
+		dbKeys.tStake, dbKeys.mint, dbKeys.supply, dbKeys.upgrade, dbKeys.evidence, dbKeys.wasm,
 	)
 
 	app.SetInitChainer(app.applyGenesis)
@@ -376,6 +393,7 @@ func (app *CyberdApp) applyGenesis(ctx sdk.Context, req abci.RequestInitChain) a
 	}
 
 	evidence.InitGenesis(ctx, app.evidenceKeeper, genesisState.Evidence)
+	wasm.InitGenesis(ctx, app.wasmKeeper, genesisState.WasmData)
 
 	if len(req.Validators) > 0 {
 		if len(req.Validators) != len(validators) {
