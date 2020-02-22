@@ -15,8 +15,6 @@ import (
 	"github.com/ipfs/go-cid"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
-
-	"github.com/cybercongress/cyberd/types"
 )
 
 const (
@@ -39,11 +37,11 @@ func LinkTxCmd(cdc *codec.Codec) *cobra.Command {
 			cidTo := link.Cid(viper.GetString(flagCidTo))
 
 			if _, err := cid.Decode(string(cidFrom)); err != nil {
-				return types.ErrInvalidCid
+				return link.ErrInvalidCid
 			}
 
 			if _, err := cid.Decode(string(cidTo)); err != nil {
-				return types.ErrInvalidCid
+				return link.ErrInvalidCid
 			}
 
 			signAddr := cliCtx.GetFromAddress()

@@ -48,8 +48,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends wget curl
 #  Download genesis file and links file from IPFS
 ###############################################################################
 # To slow using ipget, currently we use gateway
-RUN wget -O /genesis.json https://ipfs.io/ipfs/QmVuQhpty8DoYYvybKhwuqTk3ocNFk64qEirXtLZbdvDgQ
-RUN wget -O /config.toml https://ipfs.io/ipfs/QmWT4vm37U14YTuGYPZnfAgawVTDPzd1TzYJyUy5i2jbmS
+RUN wget -O /genesis.json https://ipfs.io/ipfs/QmTTBz7svGkrnigzBhUvnLKExY6LfYQrM3jXzWUFLeM3Xo
+RUN wget -O /config.toml https://ipfs.io/ipfs/QmYDtVn8xJiR69fLDF2d384aSkSNzwKMrAwz5saa4HUuaj
 
 WORKDIR /
 
@@ -60,6 +60,9 @@ COPY --from=build_stage /sources/build/cyberdcli /usr/bin/cyberdcli
 
 COPY --from=build_stage /usr/lib/cbdrank.h /usr/lib/cbdrank.h
 COPY --from=build_stage /usr/lib/libcbdrank.so /usr/lib/libcbdrank.so
+
+COPY --from=build_stage /sources/libgo_cosmwasm.so /usr/bin/libgo_cosmwasm.so
+COPY --from=build_stage /sources/libgo_cosmwasm.so /usr/lib/libgo_cosmwasm.so
 
 #  Copy startup scripts
 ###############################################################################

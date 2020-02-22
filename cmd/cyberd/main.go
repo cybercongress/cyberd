@@ -106,7 +106,7 @@ func newApp(logger log.Logger, db dbm.DB, traceStore io.Writer) abci.Application
 	cyberdApp := app.NewCyberdApp(
 		logger, db, traceStore, true, invCheckPeriod, skipUpgradeHeights,
 		computeUnit, searchEnabled,
-		baseapp.SetPruning(store.PruneNothing),
+		baseapp.SetPruning(store.PruneNothing), // Change with 0.38.1 and adjust tested default pruning config
 		baseapp.SetMinGasPrices(viper.GetString(server.FlagMinGasPrices)),
 		baseapp.SetHaltHeight(viper.GetUint64(server.FlagHaltHeight)),
 		baseapp.SetHaltTime(viper.GetUint64(server.FlagHaltTime)),
