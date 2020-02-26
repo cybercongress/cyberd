@@ -3,11 +3,11 @@ package keeper
 import (
 	"github.com/cosmos/cosmos-sdk/codec"
 
-	"github.com/cybercongress/cyberd/merkle"
-	"github.com/cybercongress/cyberd/store"
-	"github.com/cybercongress/cyberd/x/bank"
-	"github.com/cybercongress/cyberd/x/link"
-	"github.com/cybercongress/cyberd/x/rank/internal/types"
+	"github.com/cybercongress/go-cyber/merkle"
+	"github.com/cybercongress/go-cyber/store"
+	"github.com/cybercongress/go-cyber/x/bank"
+	"github.com/cybercongress/go-cyber/x/link"
+	"github.com/cybercongress/go-cyber/x/rank/internal/types"
 	"strconv"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"

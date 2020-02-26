@@ -1,7 +1,7 @@
 package rpc
 
 import (
-	"github.com/cybercongress/cyberd/app"
+	"github.com/cybercongress/go-cyber/app"
 	"github.com/tendermint/tendermint/rpc/core"
 	"github.com/tendermint/tendermint/rpc/lib/server"
 )

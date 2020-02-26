@@ -5,7 +5,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/auth"
 	"github.com/tendermint/tendermint/crypto"
 
-	cbd "github.com/cybercongress/cyberd/types"
+	cbd "github.com/cybercongress/go-cyber/types"
 )
 
 // Used to hodl total user stake in memory for further rank calculation.

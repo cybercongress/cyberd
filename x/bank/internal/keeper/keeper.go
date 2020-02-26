@@ -4,8 +4,8 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkbank "github.com/cosmos/cosmos-sdk/x/bank"
 	"github.com/cosmos/cosmos-sdk/x/params"
-	"github.com/cybercongress/cyberd/types/coin"
-	"github.com/cybercongress/cyberd/x/bank/internal/types"
+	"github.com/cybercongress/go-cyber/types/coin"
+	"github.com/cybercongress/go-cyber/x/bank/internal/types"
 )
 
 type Keeper struct {

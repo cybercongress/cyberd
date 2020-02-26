@@ -7,8 +7,8 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/auth/client/utils"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 
-	cbd "github.com/cybercongress/cyberd/types"
-	"github.com/cybercongress/cyberd/x/link"
+	cbd "github.com/cybercongress/go-cyber/types"
+	"github.com/cybercongress/go-cyber/x/link"
 
 	"github.com/ipfs/go-cid"
 	"github.com/spf13/cobra"

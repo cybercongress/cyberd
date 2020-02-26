@@ -28,15 +28,15 @@ import (
 	"github.com/tendermint/tendermint/libs/log"
 	dbm "github.com/tendermint/tm-db"
 
-	"github.com/cybercongress/cyberd/store"
-	"github.com/cybercongress/cyberd/types"
-	cbd "github.com/cybercongress/cyberd/types"
-	"github.com/cybercongress/cyberd/types/coin"
-	"github.com/cybercongress/cyberd/util"
-	bw "github.com/cybercongress/cyberd/x/bandwidth"
-	cbdbank "github.com/cybercongress/cyberd/x/bank"
-	"github.com/cybercongress/cyberd/x/link"
-	"github.com/cybercongress/cyberd/x/rank"
+	"github.com/cybercongress/go-cyber/store"
+	"github.com/cybercongress/go-cyber/types"
+	cbd "github.com/cybercongress/go-cyber/types"
+	"github.com/cybercongress/go-cyber/types/coin"
+	"github.com/cybercongress/go-cyber/util"
+	bw "github.com/cybercongress/go-cyber/x/bandwidth"
+	cbdbank "github.com/cybercongress/go-cyber/x/bank"
+	"github.com/cybercongress/go-cyber/x/link"
+	"github.com/cybercongress/go-cyber/x/rank"
 )
 
 const (

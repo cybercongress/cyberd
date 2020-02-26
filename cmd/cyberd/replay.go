@@ -7,7 +7,7 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/cybercongress/cyberd/x/rank"
+	"github.com/cybercongress/go-cyber/x/rank"
 
 	cpm "github.com/otiai10/copy"
 	"github.com/spf13/cobra"
@@ -18,7 +18,7 @@ import (
 	tmstore "github.com/tendermint/tendermint/store"
 	tm "github.com/tendermint/tendermint/types"
 
-	"github.com/cybercongress/cyberd/app"
+	"github.com/cybercongress/go-cyber/app"
 
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	"github.com/cosmos/cosmos-sdk/server"

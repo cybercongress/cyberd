@@ -1,9 +1,9 @@
 package rank
 
 import (
-	"github.com/cybercongress/cyberd/x/rank/exported"
-	"github.com/cybercongress/cyberd/x/rank/internal/keeper"
-	"github.com/cybercongress/cyberd/x/rank/internal/types"
+	"github.com/cybercongress/go-cyber/x/rank/exported"
+	"github.com/cybercongress/go-cyber/x/rank/internal/keeper"
+	"github.com/cybercongress/go-cyber/x/rank/internal/types"
 )
 
 const (

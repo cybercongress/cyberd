@@ -1,9 +1,9 @@
 package bank
 
 import (
-	"github.com/cybercongress/cyberd/x/bank/exported"
-	"github.com/cybercongress/cyberd/x/bank/internal/keeper"
-	"github.com/cybercongress/cyberd/x/bank/internal/types"
+	"github.com/cybercongress/go-cyber/x/bank/exported"
+	"github.com/cybercongress/go-cyber/x/bank/internal/keeper"
+	"github.com/cybercongress/go-cyber/x/bank/internal/types"
 )
 
 type (

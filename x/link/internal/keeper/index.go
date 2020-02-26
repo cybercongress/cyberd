@@ -1,9 +1,9 @@
 package keeper
 
 import (
-	"github.com/cybercongress/cyberd/merkle"
-	"github.com/cybercongress/cyberd/util"
-	"github.com/cybercongress/cyberd/x/link/internal/types"
+	"github.com/cybercongress/go-cyber/merkle"
+	"github.com/cybercongress/go-cyber/util"
+	"github.com/cybercongress/go-cyber/x/link/internal/types"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	cmn "github.com/tendermint/tendermint/libs/common"

@@ -2,7 +2,7 @@ package main
 
 import (
 	"encoding/json"
-	"github.com/cybercongress/cyberd/cmd/cyberd/rpc"
+	"github.com/cybercongress/go-cyber/cmd/cyberd/rpc"
 	"io"
 
 	"github.com/spf13/cobra"
@@ -14,7 +14,7 @@ import (
 	tmtypes "github.com/tendermint/tendermint/types"
 	dbm "github.com/tendermint/tm-db"
 
-	"github.com/cybercongress/cyberd/app"
+	"github.com/cybercongress/go-cyber/app"
 
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	"github.com/cosmos/cosmos-sdk/client"
@@ -24,7 +24,7 @@ import (
 	genaccscli "github.com/cosmos/cosmos-sdk/x/genaccounts/client/cli"
 	genutilcli "github.com/cosmos/cosmos-sdk/x/genutil/client/cli"
 	"github.com/cosmos/cosmos-sdk/x/staking"
-	"github.com/cybercongress/cyberd/x/rank"
+	"github.com/cybercongress/go-cyber/x/rank"
 )
 
 const (

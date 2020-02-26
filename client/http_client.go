@@ -14,10 +14,10 @@ import (
 	tdmClient "github.com/tendermint/tendermint/rpc/client"
 	"github.com/tendermint/tendermint/rpc/lib/client"
 
-	"github.com/cybercongress/cyberd/app"
-	"github.com/cybercongress/cyberd/cmd/cyberd/rpc"
-	"github.com/cybercongress/cyberd/x/bandwidth"
-	"github.com/cybercongress/cyberd/x/link"
+	"github.com/cybercongress/go-cyber/app"
+	"github.com/cybercongress/go-cyber/cmd/cyberd/rpc"
+	"github.com/cybercongress/go-cyber/x/bandwidth"
+	"github.com/cybercongress/go-cyber/x/link"
 )
 
 var _ CyberdClient = &HttpCyberdClient{}

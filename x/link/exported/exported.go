@@ -5,8 +5,8 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
-	"github.com/cybercongress/cyberd/x/link/internal/keeper"
-	"github.com/cybercongress/cyberd/x/link/internal/types"
+	"github.com/cybercongress/go-cyber/x/link/internal/keeper"
+	"github.com/cybercongress/go-cyber/x/link/internal/types"
 )
 
 type KeeperI interface {

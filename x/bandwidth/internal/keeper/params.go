@@ -4,7 +4,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/x/params"
 
-	"github.com/cybercongress/cyberd/x/bandwidth/internal/types"
+	"github.com/cybercongress/go-cyber/x/bandwidth/internal/types"
 )
 
 // ParamTable for bandwidth module

@@ -2,8 +2,8 @@ package client
 
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/cybercongress/cyberd/x/bandwidth"
-	"github.com/cybercongress/cyberd/x/link"
+	"github.com/cybercongress/go-cyber/x/bandwidth"
+	"github.com/cybercongress/go-cyber/x/link"
 )
 
 type CyberdClient interface {

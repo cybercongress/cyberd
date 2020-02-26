@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/x/auth"
-	"github.com/cybercongress/cyberd/x/link"
+	"github.com/cybercongress/go-cyber/x/link"
 	"github.com/tendermint/tendermint/rpc/lib/types"
 )
 

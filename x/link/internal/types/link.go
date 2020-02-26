@@ -2,7 +2,7 @@ package types
 
 import (
 	"encoding/binary"
-	. "github.com/cybercongress/cyberd/types"
+	. "github.com/cybercongress/go-cyber/types"
 )
 
 type Link struct {

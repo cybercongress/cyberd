@@ -3,8 +3,8 @@ package exported
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkbank "github.com/cosmos/cosmos-sdk/x/bank"
-	cbd "github.com/cybercongress/cyberd/types"
-	"github.com/cybercongress/cyberd/x/bank/internal/types"
+	cbd "github.com/cybercongress/go-cyber/types"
+	"github.com/cybercongress/go-cyber/x/bank/internal/types"
 )
 
 type Keeper interface {

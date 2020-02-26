@@ -4,7 +4,7 @@ import (
 	"errors"
 	"github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/x/auth"
-	bw "github.com/cybercongress/cyberd/x/bandwidth"
+	bw "github.com/cybercongress/go-cyber/x/bandwidth"
 	"github.com/tendermint/tendermint/rpc/lib/types"
 )
 

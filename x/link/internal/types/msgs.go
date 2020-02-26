@@ -2,7 +2,7 @@ package types
 
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	cbd "github.com/cybercongress/cyberd/types"
+	cbd "github.com/cybercongress/go-cyber/types"
 	"github.com/ipfs/go-cid"
 )
 

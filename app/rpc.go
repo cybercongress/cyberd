@@ -6,10 +6,10 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/x/auth"
-	"github.com/cybercongress/cyberd/merkle"
-	cbd "github.com/cybercongress/cyberd/types"
-	bw "github.com/cybercongress/cyberd/x/bandwidth"
-	"github.com/cybercongress/cyberd/x/link"
+	"github.com/cybercongress/go-cyber/merkle"
+	cbd "github.com/cybercongress/go-cyber/types"
+	bw "github.com/cybercongress/go-cyber/x/bandwidth"
+	"github.com/cybercongress/go-cyber/x/link"
 	abci "github.com/tendermint/tendermint/abci/types"
 )
 

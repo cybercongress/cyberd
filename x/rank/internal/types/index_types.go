@@ -2,7 +2,7 @@ package types
 
 import (
 	"errors"
-	"github.com/cybercongress/cyberd/x/link"
+	"github.com/cybercongress/go-cyber/x/link"
 )
 
 type RankedCidNumber struct {

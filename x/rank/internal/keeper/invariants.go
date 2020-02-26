@@ -3,8 +3,8 @@ package keeper
 import (
 	"fmt"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/cybercongress/cyberd/x/rank/exported"
-	"github.com/cybercongress/cyberd/x/rank/internal/types"
+	"github.com/cybercongress/go-cyber/x/rank/exported"
+	"github.com/cybercongress/go-cyber/x/rank/internal/types"
 )
 
 func RegisterInvariants(ir sdk.InvariantRegistry, k exported.StateKeeper) {

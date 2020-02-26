@@ -3,7 +3,7 @@ package keeper
 import (
 	"github.com/cosmos/cosmos-sdk/x/params"
 
-	"github.com/cybercongress/cyberd/x/rank/exported"
+	"github.com/cybercongress/go-cyber/x/rank/exported"
 )
 
 var _ exported.Keeper = &BaseRankKeeper{}

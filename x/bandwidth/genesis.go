@@ -2,7 +2,7 @@ package bandwidth
 
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/cybercongress/cyberd/x/bandwidth/internal/types"
+	"github.com/cybercongress/go-cyber/x/bandwidth/internal/types"
 )
 
 // Genesis accounts should contains fully restored bandwidth on block 0

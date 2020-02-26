@@ -7,8 +7,8 @@ import (
 	"sort"
 	"time"
 
-	"github.com/cybercongress/cyberd/merkle"
-	"github.com/cybercongress/cyberd/x/link"
+	"github.com/cybercongress/go-cyber/merkle"
+	"github.com/cybercongress/go-cyber/x/link"
 
 	"github.com/tendermint/tendermint/libs/log"
 )

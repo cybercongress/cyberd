@@ -3,7 +3,7 @@
 package keeper
 
 import (
-	"github.com/cybercongress/cyberd/x/rank/internal/types"
+	"github.com/cybercongress/go-cyber/x/rank/internal/types"
 
 	"github.com/tendermint/tendermint/libs/log"
 )

@@ -5,7 +5,7 @@ import (
 	"bytes"
 	"encoding/binary"
 	"errors"
-	"github.com/cybercongress/cyberd/util"
+	"github.com/cybercongress/go-cyber/util"
 	"github.com/vasilistefanenko/atomicf"
 	"io"
 	"os"

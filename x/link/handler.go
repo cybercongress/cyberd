@@ -3,8 +3,8 @@ package link
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
-	cbd "github.com/cybercongress/cyberd/types"
-	cbdlink "github.com/cybercongress/cyberd/x/link/internal/types"
+	cbd "github.com/cybercongress/go-cyber/types"
+	cbdlink "github.com/cybercongress/go-cyber/x/link/internal/types"
 
 	"github.com/cosmos/cosmos-sdk/x/auth"
 )

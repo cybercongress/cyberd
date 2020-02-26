@@ -4,8 +4,8 @@ import (
 	"fmt"
 
 	"github.com/cosmos/cosmos-sdk/codec"
-	"github.com/cybercongress/cyberd/x/bandwidth/exported"
-	"github.com/cybercongress/cyberd/x/bandwidth/internal/types"
+	"github.com/cybercongress/go-cyber/x/bandwidth/exported"
+	"github.com/cybercongress/go-cyber/x/bandwidth/internal/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	abci "github.com/tendermint/tendermint/abci/types"
 )

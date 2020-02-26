@@ -1,7 +1,7 @@
 package rpc
 
 import (
-	"github.com/cybercongress/cyberd/merkle"
+	"github.com/cybercongress/go-cyber/merkle"
 )
 
 type RankAndProofResult struct {

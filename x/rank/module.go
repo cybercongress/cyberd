@@ -11,9 +11,9 @@ import (
 	"github.com/spf13/cobra"
 	abci "github.com/tendermint/tendermint/abci/types"
 
-	"github.com/cybercongress/cyberd/x/rank/client/rest"
-	"github.com/cybercongress/cyberd/x/rank/client/cli"
-	"github.com/cybercongress/cyberd/x/rank/internal/keeper"
+	"github.com/cybercongress/go-cyber/x/rank/client/rest"
+	"github.com/cybercongress/go-cyber/x/rank/client/cli"
+	"github.com/cybercongress/go-cyber/x/rank/internal/keeper"
 )
 
 // type check to ensure the interface is properly implemented

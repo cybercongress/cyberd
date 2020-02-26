@@ -1,4 +1,4 @@
-module github.com/cybercongress/cyberd
+module github.com/cybercongress/go-cyber
 
 go 1.13
 

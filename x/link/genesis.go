@@ -8,7 +8,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/tendermint/tendermint/libs/log"
 
-	"github.com/cybercongress/cyberd/util"
+	"github.com/cybercongress/go-cyber/util"
 )
 
 const (
