@@ -200,6 +200,10 @@ func NewCyberdApp(logger log.Logger, db dbm.DB, traceStore io.Writer, loadLatest
 	)
 	app.upgradeKeeper = upgrade.NewKeeper(skipUpgradeHeights, dbKeys.upgrade, app.cdc)
 
+	app.upgradeKeeper.SetUpgradeHandler("euler-7", func(ctx sdk.Context, plan upgrade.Plan) {
+
+	})
+
 	var wasmRouter = baseApp.Router()
 	homeDir := viper.GetString(cli.HomeFlag)
 
