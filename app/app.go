@@ -347,14 +347,15 @@ func (app *CyberdApp) applyGenesis(ctx sdk.Context, req abci.RequestInitChain) a
 		ctx, app.stakingKeeper, app.accountKeeper, app.supplyKeeper, genesisState.StakingData,
 	)
 	// load the accounts
-	for _, account := range genesisState.AuthData.Accounts {
-		app.accountKeeper.GetNextAccountNumber(ctx)
-		app.accountKeeper.SetAccount(ctx, account)
+	app.accountKeeper.SetParams(ctx, genesisState.AuthData.Params)
+	accounts := auth.SanitizeGenesisAccounts(genesisState.AuthData.Accounts)
+	for _, a := range accounts {
+		acc := app.accountKeeper.NewAccount(ctx, a)
+		app.accountKeeper.SetAccount(ctx, acc)
 		app.stakingIndexKeeper.UpdateStake(
-			types.AccNumber(account.GetAccountNumber()),
-			account.GetCoins().AmountOf(coin.CYB).Int64())
+			types.AccNumber(acc.GetAccountNumber()),
+			acc.GetCoins().AmountOf(coin.CYB).Int64())
 	}
-	auth.InitGenesis(ctx, app.accountKeeper, genesisState.AuthData)
 	cyberbank.InitGenesis(ctx, app.bankKeeper, genesisState.BankData)
 	slashing.InitGenesis(ctx, app.slashingKeeper, app.stakingKeeper, genesisState.SlashingData)
 	gov.InitGenesis(ctx, app.govKeeper, app.supplyKeeper, genesisState.GovData)
