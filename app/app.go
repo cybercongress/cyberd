@@ -53,7 +53,7 @@ const (
 
 // default home directories for expected binaries
 var (
-	DefaultCLIHome  = os.ExpandEnv("$HOME/.cybercli")
+	DefaultCLIHome  = os.ExpandEnv("$HOME/.cyberdcli")
 	DefaultNodeHome = os.ExpandEnv("$HOME/.cyberd")
 
 	ModuleBasics = module.NewBasicManager(

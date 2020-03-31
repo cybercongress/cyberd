@@ -83,7 +83,7 @@ func validateCalculationPeriod(i interface{}) error {
 	}
 
 	if v <= int64(2) {
-		return fmt.Errorf("calculation period too low: %s", v)
+		return fmt.Errorf("calculation period too low: %d", v)
 	}
 
 	return nil

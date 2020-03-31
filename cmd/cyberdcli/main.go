@@ -22,6 +22,7 @@ import (
 	"github.com/tendermint/go-amino"
 	"github.com/tendermint/tendermint/libs/cli"
 	"os"
+	_ "github.com/cybercongress/go-cyber/cmd/cyberdcli/lcd/statik"
 )
 
 func main() {

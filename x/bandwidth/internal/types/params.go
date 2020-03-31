@@ -129,7 +129,7 @@ func validateTxCost(i interface{}) error {
 	}
 
 	if v <= int64(10) {
-		return fmt.Errorf("tx cost too low: %s", v)
+		return fmt.Errorf("tx cost too low: %d", v)
 	}
 
 	return nil
@@ -143,7 +143,7 @@ func validateLinkMsgCost(i interface{}) error {
 	}
 
 	if v <= int64(10) {
-		return fmt.Errorf("link msg cost too low: %s", v)
+		return fmt.Errorf("link msg cost too low: %d", v)
 	}
 
 	return nil
@@ -157,7 +157,7 @@ func validateNonLinkMsgCost(i interface{}) error {
 	}
 
 	if v <= int64(10) {
-		return fmt.Errorf("non link msg too low: %s", v)
+		return fmt.Errorf("non link msg too low: %d", v)
 	}
 
 	return nil
@@ -171,7 +171,7 @@ func validateRecoveryPeriod(i interface{}) error {
 	}
 
 	if v <= int64(100) {
-		return fmt.Errorf("recovery period too low: %s", v)
+		return fmt.Errorf("recovery period too low: %d", v)
 	}
 
 	return nil
@@ -185,7 +185,7 @@ func validateAdjustPricePeriod(i interface{}) error {
 	}
 
 	if v <= int64(2) {
-		return fmt.Errorf("adjust price period too low: %s", v)
+		return fmt.Errorf("adjust price period too low: %d", v)
 	}
 
 	return nil
@@ -213,7 +213,7 @@ func validateDesirableBandwidth(i interface{}) error {
 	}
 
 	if v <= int64(10000) {
-		return fmt.Errorf("desirable bandwidth too low: %s", v)
+		return fmt.Errorf("desirable bandwidth too low: %d", v)
 	}
 
 	return nil
@@ -227,7 +227,7 @@ func validateMaxBlockBanwidth(i interface{}) error {
 	}
 
 	if v <= uint64(100) {
-		return fmt.Errorf("max block bandwidth too low: %s", v)
+		return fmt.Errorf("max block bandwidth too low: %d", v)
 	}
 
 	return nil
