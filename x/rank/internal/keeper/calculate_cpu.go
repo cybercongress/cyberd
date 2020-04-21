@@ -1,14 +1,21 @@
 package keeper
 
 import (
+	"bytes"
+	"encoding/gob"
+	"fmt"
+	"io/ioutil"
 	"math"
 
+	"github.com/tendermint/tendermint/libs/log"
+
+	cbd "github.com/cybercongress/go-cyber/types"
 	"github.com/cybercongress/go-cyber/x/link"
 	"github.com/cybercongress/go-cyber/x/rank/internal/types"
 )
 
 
-func calculateRankCPU(ctx *types.CalculationContext) []float64 {
+func calculateRankCPU(ctx *types.CalculationContext, logger log.Logger) []float64 {
 
 	inLinks := ctx.GetInLinks()
 	tolerance := ctx.GetTolerance()
@@ -30,8 +37,13 @@ func calculateRankCPU(ctx *types.CalculationContext) []float64 {
 		}
 	}
 
+	logger.Info("RANK", "defaultRank:", defaultRank)
+	logger.Info("RANK", "danglingNodesSize:", danglingNodesSize)
+
 	innerProductOverSize := defaultRank * (float64(danglingNodesSize) / float64(size))
 	defaultRankWithCorrection := float64(dampingFactor*innerProductOverSize) + defaultRank
+
+	logger.Info("RANK", "defaultRankWithCorrection:", defaultRankWithCorrection)
 
 	change := tolerance + 1
 
@@ -43,7 +55,17 @@ func calculateRankCPU(ctx *types.CalculationContext) []float64 {
 		change = calculateChange(prevrank, rank)
 		prevrank = rank
 		steps++
+		logger.Info("RANK", "step:", steps)
 	}
+
+
+	st := ctx.GetStakes()
+	outl := ctx.GetOutLinks()
+	inl := ctx.GetInLinks()
+	saveStakesToBytesFile(&st, "./diffX/stakes.data")
+	saveLinksToBytesFile(&outl, "./diffX/outLinks.data")
+	saveLinksToBytesFile(&inl, "./diffX/inLinks.data")
+	logger.Info("RANK: data saved", )
 
 	return rank
 }
@@ -108,4 +130,32 @@ func calculateChange(prevrank, rank []float64) float64 {
 	}
 
 	return maxDiff
+}
+
+func saveLinksToBytesFile(links *map[link.CidNumber]link.CidLinks, fileName string) {
+	var network bytes.Buffer
+	enc := gob.NewEncoder(&network)
+	err := enc.Encode(links)
+	if err != nil {
+		fmt.Printf("encode error:", err)
+	}
+	err = ioutil.WriteFile(fileName, network.Bytes(), 0644)
+	if err != nil {
+		fmt.Printf("error on write links to file  err: %v", err)
+	}
+
+}
+
+func saveStakesToBytesFile(stakes *map[cbd.AccNumber]uint64, fileName string) {
+	var network bytes.Buffer
+	enc := gob.NewEncoder(&network)
+	err := enc.Encode(stakes)
+	if err != nil {
+		fmt.Printf("encode error:", err)
+	}
+	err = ioutil.WriteFile(fileName, network.Bytes(), 0644)
+	if err != nil {
+		fmt.Printf("error on write stakes to file  err: %v", err)
+	}
+
 }

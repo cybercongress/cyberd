@@ -13,7 +13,7 @@ func CalculateRank(ctx *types.CalculationContext, unit types.ComputeUnit, logger
 	start := time.Now()
 	if unit == types.CPU {
 		//used only for development
-		rank = types.NewRank(calculateRankCPU(ctx), logger, ctx.FullTree)
+		rank = types.NewRank(calculateRankCPU(ctx, logger), logger, ctx.FullTree)
 	} else {
 		rank = types.NewRank(calculateRankGPU(ctx, logger), logger, ctx.FullTree)
 	}

@@ -35,6 +35,9 @@ func NewRank(values []float64, logger log.Logger, fullTree bool) Rank {
 	if (fullTree == true) {
 		newSortedCIDs = BuildTop(values, 1000)
 	}
+	//for cid, rank := range newSortedCIDs {
+	//	logger.Info("TOP", "CID", cid, "rank", rank)
+	//}
 
 	return Rank{Values: values, MerkleTree: merkleTree, CidCount: uint64(len(values)), TopCIDs: newSortedCIDs}
 }

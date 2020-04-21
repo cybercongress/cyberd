@@ -90,7 +90,7 @@ func (s *StateKeeper) Load(ctx sdk.Context, log log.Logger) {
 		panic(err)
 	}
 
-	// if we fell down and need to start new rank calculation
+	//if we fell down and need to start new rank calculation
 	if !s.mainKeeper.GetRankCalculationFinished(ctx) {
 		s.startRankCalculation(ctx, dampingFactor, tolerance, log)
 		s.rankCalculationFinished = false
