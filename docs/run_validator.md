@@ -78,13 +78,13 @@ source $HOME/.profile
 5. To check your installation run
 
 ```bash
-`go version`
+go version
 ```
 
 This will let you know if everything was installed correctly. As an output, you should see the following (version number may vary, of course):
 
 ```bash
-go version go1.13.8 linux/amd64
+go version go1.13.9 linux/amd64
 ```
 
 #### Installing Nvidia drivers 
@@ -344,7 +344,7 @@ LimitNOFILE=4096
 WantedBy=multi-user.target
 ```
 
-If you need to enable search of the node add the flag `--allow-search=true` right after `--compute-rank-on-gpu=true`. If you need to run a rest-server alongside `cberd` here is a service file for it (do `sudo nano /etc/systemd/system/cyberdcli-rest.service` and paste the following), just make sure you'll replace `ubuntu` to your user name and group:
+If you need to enable search of the node add the flag `--allow-search=true` right after `--compute-rank-on-gpu=true`. If you need to run a rest-server alongside `cyberd` here is a service file for it (do `sudo nano /etc/systemd/system/cyberdcli-rest.service` and paste the following), just make sure you'll replace `ubuntu` to your user name and group:
 
 ```bash
 [Unit]
