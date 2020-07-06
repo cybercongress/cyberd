@@ -5,7 +5,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/x/auth"
 	"github.com/cybercongress/go-cyber/x/link"
-	"github.com/tendermint/tendermint/rpc/lib/types"
+	rpctypes "github.com/tendermint/tendermint/rpc/jsonrpc/types"
 )
 
 func IsLinkExist(ctx *rpctypes.Context, from string, to string, address string) (bool, error) {

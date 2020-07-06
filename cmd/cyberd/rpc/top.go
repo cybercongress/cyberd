@@ -1,7 +1,7 @@
 package rpc
 
 import (
-	"github.com/tendermint/tendermint/rpc/lib/types"
+	rpctypes "github.com/tendermint/tendermint/rpc/jsonrpc/types"
 )
 
 func Top(ctx *rpctypes.Context, page, perPage int) (*ResultSearch, error) {

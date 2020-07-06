@@ -4,7 +4,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/staking"
 	sdk "github.com/cosmos/cosmos-sdk/x/staking/types"
 	abci "github.com/tendermint/tendermint/abci/types"
-	"github.com/tendermint/tendermint/rpc/lib/types"
+	rpctypes "github.com/tendermint/tendermint/rpc/jsonrpc/types"
 )
 
 func StakingValidators(ctx *rpctypes.Context, page, limit int, status string) ([]sdk.Validator, error) {

@@ -3,7 +3,7 @@ package rpc
 import (
 	"github.com/cybercongress/go-cyber/app"
 	"github.com/tendermint/tendermint/rpc/core"
-	"github.com/tendermint/tendermint/rpc/lib/server"
+	rpcserver "github.com/tendermint/tendermint/rpc/jsonrpc/server"
 )
 
 var cyberdApp *app.CyberdApp

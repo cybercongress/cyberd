@@ -2,7 +2,7 @@ package rpc
 
 import (
 	"github.com/cybercongress/go-cyber/app"
-	"github.com/tendermint/tendermint/rpc/lib/types"
+	rpctypes "github.com/tendermint/tendermint/rpc/jsonrpc/types"
 )
 
 type ResultSearch struct {

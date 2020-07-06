@@ -1,6 +1,8 @@
 package rpc
 
-import "github.com/tendermint/tendermint/rpc/lib/types"
+import (
+	rpctypes "github.com/tendermint/tendermint/rpc/jsonrpc/types"
+)
 
 type ResultNetworkLoad struct {
 	Load float64 `amino:"unsafe" json:"load"`
