@@ -93,7 +93,7 @@ func (k Keeper) InputOutputCoins(
 func (k Keeper) DelegateCoins(ctx sdk.Context, delegatorAddr, moduleAccAddr sdk.AccAddress, amt sdk.Coins) error {
 	err := k.Keeper.DelegateCoins(ctx, delegatorAddr, moduleAccAddr, amt)
 	if err == nil {
-		k.onCoinsTransfer(ctx, delegatorAddr, nil)
+		k.onCoinsTransfer(ctx, nil, moduleAccAddr)
 	}
 	return err
 }

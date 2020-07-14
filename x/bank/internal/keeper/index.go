@@ -1,6 +1,9 @@
 package keeper
 
 import (
+	"fmt"
+	"strconv"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/x/auth/exported"
 	"github.com/tendermint/tendermint/crypto"
@@ -91,10 +94,22 @@ func (s *IndexedKeeper) EndBlocker(ctx sdk.Context) {
 		accNum := cbd.AccNumber(s.accountKeeper.GetAccount(ctx, addr).GetAccountNumber())
 		s.userNewTotalStake[accNum] = uint64(stake)
 		account := s.accountKeeper.GetAccount(ctx, addr)
+		//fmt.Printf("HOOK: account: %s \n", account.GetAddress())
 		if account != nil {
 			accNum := cbd.AccNumber(account.GetAccountNumber())
 			s.userNewTotalStake[accNum] = uint64(stake)
 		}
 	}
 	s.accsToUpdate = make([]sdk.AccAddress, 0)
+
+	accs := s.Keeper.accountKeeper.GetAllAccounts(ctx)
+	for _, acc := range accs {
+		address := acc.GetAddress()
+		stakeBank := uint64(s.Keeper.GetAccountTotalStake(ctx, address))
+		if (stakeBank == 0) { continue }
+		stakeIndex := uint64(s.userNewTotalStake[cbd.AccNumber(acc.GetAccountNumber())])
+		if (stakeBank != stakeIndex) {
+			fmt.Printf("STAKE: account: %s index: %s bank: %s \n", address, strconv.FormatUint(stakeIndex, 10), strconv.FormatUint(stakeBank,10))
+		}
+	}
 }
