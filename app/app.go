@@ -349,7 +349,7 @@ func NewCyberdApp(logger log.Logger, db dbm.DB, traceStore io.Writer, loadLatest
 	app.SetEndBlocker(app.EndBlocker)
 	app.SetAnteHandler(
 		NewAnteHandler(
-			app.accountKeeper, app.bandwidthMeter, app.supplyKeeper, auth.DefaultSigVerificationGasConsumer,
+			app.accountKeeper, app.cyberbank, app.supplyKeeper, app.bandwidthMeter, auth.DefaultSigVerificationGasConsumer,
 		),
 	)
 
