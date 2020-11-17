@@ -29,14 +29,13 @@ func NewAnteHandler(
 ) sdk.AnteHandler {
 	return sdk.ChainAnteDecorators(
 		ante.NewSetUpContextDecorator(),
-		ante.NewMempoolFeeDecorator(),
+		NewMempoolFeeDecorator(),
 		ante.NewValidateBasicDecorator(),
 		ante.NewValidateMemoDecorator(ak),
 		ante.NewConsumeGasForTxSizeDecorator(ak),
 		ante.NewSetPubKeyDecorator(ak),
 		ante.NewValidateSigCountDecorator(ak),
-		//ante.NewDeductFeeDecorator(ak, supplyKeeper),
-		NewDeductBandwidthDecorator(ak, bankKeeper, supplyKeeper, abk),
+		NewDeductFeeBandRouterDecorator(ak, bankKeeper, supplyKeeper, abk),
 		ante.NewSigGasConsumeDecorator(ak, sigGasConsumer),
 		ante.NewSigVerificationDecorator(ak),
 		ante.NewIncrementSequenceDecorator(ak),
@@ -54,16 +53,19 @@ type FeeTx interface {
 	FeePayer() sdk.AccAddress
 }
 
-
-type DeductBandwidthDecorator struct {
+// DeductFeeDecorator deducts fees from the first signer of the tx
+// If the first signer does not have the funds to pay for the fees, return with InsufficientFunds error
+// Call next AnteHandler if fees successfully deducted
+// CONTRACT: Tx must implement FeeTx interface to use DeductFeeDecorator
+type DeductFeeBandRouterDecorator struct {
 	ak  auth.AccountKeeper
 	bk 	bank.Keeper
 	sk	types.SupplyKeeper
 	bm	*bandwidth.BandwidthMeter
 }
 
-func NewDeductBandwidthDecorator(ak auth.AccountKeeper, bk bank.Keeper, sk types.SupplyKeeper, bm *bandwidth.BandwidthMeter) DeductBandwidthDecorator {
-	return DeductBandwidthDecorator{
+func NewDeductFeeBandRouterDecorator(ak auth.AccountKeeper, bk bank.Keeper, sk types.SupplyKeeper, bm *bandwidth.BandwidthMeter) DeductFeeBandRouterDecorator {
+	return DeductFeeBandRouterDecorator{
 		ak: ak,
 		bk: bk,
 		sk: sk,
@@ -71,13 +73,14 @@ func NewDeductBandwidthDecorator(ak auth.AccountKeeper, bk bank.Keeper, sk types
 	}
 }
 
-func (dbd DeductBandwidthDecorator) AnteHandle(ctx sdk.Context, tx sdk.Tx, simulate bool, next sdk.AnteHandler) (newCtx sdk.Context, err error) {
+func (drd DeductFeeBandRouterDecorator) AnteHandle(ctx sdk.Context, tx sdk.Tx, simulate bool, next sdk.AnteHandler) (newCtx sdk.Context, err error) {
 
 	nativeFlag := false
 	wasmExecuteFlag := false
 	ai2pay := sdk.AccAddress{}
 
 	for _, msg := range tx.GetMsgs() {
+		// TODO optimize checks
 		if (msg.Route() != link.RouterKey && msg.Route() != wasm.RouterKey) {
 			nativeFlag = true
 			break
@@ -89,6 +92,7 @@ func (dbd DeductBandwidthDecorator) AnteHandle(ctx sdk.Context, tx sdk.Tx, simul
 		if (msg.Route() == wasm.RouterKey && msg.Type() == "execute") {
 			executeTx, ok := msg.(wasm.MsgExecuteContract)
 			if !ok {
+				//return ctx, sdkerrors.Wrap(sdkerrors.ErrTxDecode, "Msg must be a MsgExecuteContract")
 				nativeFlag = true
 				break
 			}
@@ -104,7 +108,7 @@ func (dbd DeductBandwidthDecorator) AnteHandle(ctx sdk.Context, tx sdk.Tx, simul
 	}
 
 	feePayer := feeTx.FeePayer()
-	feePayerAcc := dbd.ak.GetAccount(ctx, feePayer)
+	feePayerAcc := drd.ak.GetAccount(ctx, feePayer)
 
 	if feePayerAcc == nil {
 		return ctx, sdkerrors.Wrapf(sdkerrors.ErrUnknownAddress, "fee payer address: %s does not exist", feePayer)
@@ -113,7 +117,7 @@ func (dbd DeductBandwidthDecorator) AnteHandle(ctx sdk.Context, tx sdk.Tx, simul
 	if nativeFlag {
 		fmt.Println("[*] Native fee tx routing")
 		if !feeTx.GetFee().IsZero() {
-			err = DeductFees(dbd.sk, dbd.bk, ctx, feePayerAcc, feeTx.GetFee(), nil)
+			err = DeductFees(drd.sk, drd.bk, ctx, feePayerAcc, feeTx.GetFee(), nil)
 			if err != nil {
 				return ctx, err
 			}
@@ -124,7 +128,7 @@ func (dbd DeductBandwidthDecorator) AnteHandle(ctx sdk.Context, tx sdk.Tx, simul
 	if wasmExecuteFlag {
 		fmt.Println("[*] Execute fee split tx routing")
 		if !feeTx.GetFee().IsZero() {
-			err = DeductFees(dbd.sk, dbd.bk, ctx, feePayerAcc, feeTx.GetFee(), ai2pay)
+			err = DeductFees(drd.sk, drd.bk, ctx, feePayerAcc, feeTx.GetFee(), ai2pay)
 			if err != nil {
 				return ctx, err
 			}
@@ -134,11 +138,11 @@ func (dbd DeductBandwidthDecorator) AnteHandle(ctx sdk.Context, tx sdk.Tx, simul
 	}
 	fmt.Println("[*] Bandwidth link tx routing")
 
-	txCost := dbd.bm.GetPricedTxCost(ctx, tx)
-	accountBandwidth := dbd.bm.GetCurrentAccountBandwidth(ctx, feePayerAcc.GetAddress())
+	txCost := drd.bm.GetPricedTxCost(ctx, tx)
+	accountBandwidth := drd.bm.GetCurrentAccountBandwidth(ctx, feePayerAcc.GetAddress())
 
-	currentBlockSpentBandwidth := dbd.bm.GetCurrentBlockSpentBandwidth(ctx)
-	maxBlockBandwidth := dbd.bm.GetMaxBlockBandwidth(ctx)
+	currentBlockSpentBandwidth := drd.bm.GetCurrentBlockSpentBandwidth(ctx)
+	maxBlockBandwidth := drd.bm.GetMaxBlockBandwidth(ctx)
 
 	if !accountBandwidth.HasEnoughRemained(txCost) {
 		return ctx, bandwidth.ErrNotEnoughBandwidth
@@ -146,8 +150,8 @@ func (dbd DeductBandwidthDecorator) AnteHandle(ctx sdk.Context, tx sdk.Tx, simul
 		return ctx, bandwidth.ErrExceededMaxBlockBandwidth
 	} else {
 		fmt.Println("-- bandwidth consumed: ", txCost)
-		dbd.bm.ConsumeAccountBandwidth(ctx, accountBandwidth, txCost)
-		dbd.bm.AddToBlockBandwidth(txCost)
+		drd.bm.ConsumeAccountBandwidth(ctx, accountBandwidth, txCost)
+		drd.bm.AddToBlockBandwidth(txCost)
 	}
 
 	return next(ctx, tx, simulate)
@@ -188,6 +192,9 @@ func DeductFees(supplyKeeper types.SupplyKeeper, bankKeeper bank.Keeper, ctx sdk
 		}
 	} else {
 		feeInCYB := sdk.NewDec(fees.AmountOf(ctypes.CYB).Int64())
+		if feeInCYB.IsZero() == true {
+			return sdkerrors.Wrapf(sdkerrors.ErrInsufficientFunds, string(""))
+		}
 		toContract := feeInCYB.Mul(sdk.NewDecWithPrec(80,2))
 		toValidators := feeInCYB.Sub(toContract)
 
@@ -210,3 +217,59 @@ func DeductFees(supplyKeeper types.SupplyKeeper, bankKeeper bank.Keeper, ctx sdk
 	return nil
 }
 
+/*-------------------------------------------------------*/
+
+// MempoolFeeDecorator will check if the transaction's fee is at least as large
+// as the local validator's minimum gasFee (defined in validator config).
+// If fee is too low, decorator returns error and tx is rejected from mempool.
+// Note this only applies when ctx.CheckTx = true
+// If fee is high enough or not CheckTx, then call next AnteHandler
+// CONTRACT: Tx must implement FeeTx to use MempoolFeeDecorator
+type MempoolFeeDecorator struct{}
+
+func NewMempoolFeeDecorator() MempoolFeeDecorator {
+	return MempoolFeeDecorator{}
+}
+
+func (mfd MempoolFeeDecorator) AnteHandle(ctx sdk.Context, tx sdk.Tx, simulate bool, next sdk.AnteHandler) (newCtx sdk.Context, err error) {
+	feeTx, ok := tx.(FeeTx)
+	if !ok {
+		return ctx, sdkerrors.Wrap(sdkerrors.ErrTxDecode, "Tx must be a FeeTx")
+	}
+	feeCoins := feeTx.GetFee()
+	gas := feeTx.GetGas()
+
+	linksFlag := true
+	for _, msg := range tx.GetMsgs() {
+		if (msg.Route() != link.RouterKey) {
+			linksFlag = false
+			break
+		}
+	}
+
+	// Ensure that the provided fees meet a minimum threshold for the validator,
+	// if this is a CheckTx. This is only for local mempool purposes, and thus
+	// is only ran on check tx.
+	if ctx.IsCheckTx() && !simulate && !linksFlag {
+		fmt.Println("[*] Tx fee mempool check")
+		minGasPrices := ctx.MinGasPrices()
+		if !minGasPrices.IsZero() {
+			requiredFees := make(sdk.Coins, len(minGasPrices))
+
+			// Determine the required fees by multiplying each required minimum gas
+			// price by the gas limit, where fee = ceil(minGasPrice * gasLimit).
+			glDec := sdk.NewDec(int64(gas))
+			for i, gp := range minGasPrices {
+				fee := gp.Amount.Mul(glDec)
+				requiredFees[i] = sdk.NewCoin(gp.Denom, fee.Ceil().RoundInt())
+			}
+
+			if !feeCoins.IsAnyGTE(requiredFees) {
+				return ctx, sdkerrors.Wrapf(sdkerrors.ErrInsufficientFee, "insufficient fees; got: %s required: %s", feeCoins, requiredFees)
+			}
+		}
+	} else {
+		fmt.Println("[*] Tx fee mempool no check")
+	}
+	return next(ctx, tx, simulate)
+}
