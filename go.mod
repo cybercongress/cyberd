@@ -3,6 +3,7 @@ module github.com/cybercongress/go-cyber
 go 1.14
 
 require (
+	github.com/CosmWasm/go-cosmwasm v0.11.0
 	github.com/CosmWasm/wasmd v0.11.0
 	github.com/cosmos/cosmos-sdk v0.39.1
 	github.com/gorilla/mux v1.7.4

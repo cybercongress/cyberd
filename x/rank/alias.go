@@ -3,6 +3,7 @@ package rank
 import (
 	"github.com/cybercongress/go-cyber/x/rank/keeper"
 	"github.com/cybercongress/go-cyber/x/rank/types"
+	"github.com/cybercongress/go-cyber/x/rank/wasm"
 )
 
 const (
@@ -18,6 +19,7 @@ const (
 var (
 	NewKeeper 			= keeper.NewKeeper
 	NewQuerier          = keeper.NewQuerier
+	NewWasmQuerier      = wasm.NewWasmQuerier
 	NewGenesisState     = types.NewGenesisState
 	DefaultGenesisState = types.DefaultGenesisState
 	ValidateGenesis     = types.ValidateGenesis
@@ -27,7 +29,6 @@ var (
 
 type (
 	StateKeeper  = keeper.StateKeeper
-
 	GenesisState = types.GenesisState
 	Params       = types.Params
 	ComputeUnit  = types.ComputeUnit

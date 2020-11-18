@@ -218,6 +218,10 @@ func (s *StateKeeper) applyNextRank() {
 // GETTERS
 //
 
+func (s *StateKeeper) GetRankValues(number uint64) uint64 {
+	return s.networkCidRank.Values[number]
+}
+
 func (s *StateKeeper) GetNetworkRankHash() []byte {
 	fmt.Println("GetNetworkRankHash: ", hex.EncodeToString(s.networkCidRank.MerkleTree.RootHash()))
 	return s.networkCidRank.MerkleTree.RootHash()

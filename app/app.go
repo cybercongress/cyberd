@@ -38,6 +38,7 @@ import (
 
 	"github.com/CosmWasm/wasmd/x/wasm"
 
+	"github.com/cybercongress/go-cyber/plugins"
 	"github.com/cybercongress/go-cyber/util"
 	bandwidth "github.com/cybercongress/go-cyber/x/bandwidth"
 	"github.com/cybercongress/go-cyber/x/cron"
@@ -238,6 +239,36 @@ func NewCyberdApp(logger log.Logger, db dbm.DB, traceStore io.Writer, loadLatest
 		AddRoute(upgrade.RouterKey, upgrade.NewSoftwareUpgradeProposalHandler(app.upgradeKeeper),
 	)
 
+	app.stakingKeeper = *stakingKeeper.SetHooks(
+		staking.NewMultiStakingHooks(app.distrKeeper.Hooks(), app.slashingKeeper.Hooks()),
+	)
+	app.cyberbank = cyberbank.NewIndexedKeeper(
+		cyberbank.NewWrap(&app.bankKeeper, &stakingKeeper, app.supplyKeeper), app.accountKeeper,
+	)
+	app.energyKeeper = energy.NewKeeper(cdc, dbKeys.energy, app.supplyKeeper, app.cyberbank, app.accountKeeper, app.subspaces[energy.ModuleName])
+	app.cyberbank.SetEnergyKeeper(&app.energyKeeper)
+	app.cyberbank.Proxy.AddHook(bandwidth.CollectAddressesWithStakeChange())
+
+	app.bandwidthMeter = bandwidth.NewBandwidthMeter(
+		dbKeys.bandwidth, app.cyberbank, bandwidth.MsgBandwidthCosts, app.subspaces[bandwidth.ModuleName],
+	)
+	app.graphKeeper = link.NewKeeper(dbKeys.links)
+	app.indexKeeper = link.NewIndexKeeper(app.graphKeeper)
+	app.rankKeeper = rank.NewKeeper(
+		dbKeys.rank, app.subspaces[rank.ModuleName],
+		allowSearch, app.cyberbank, app.indexKeeper, app.graphKeeper, computeUnit,
+	)
+	app.cronKeeper = cron.NewKeeper(cdc, dbKeys.cron, app.wasmKeeper, app.supplyKeeper, app.cyberbank, app.accountKeeper, app.subspaces[cron.ModuleName])
+
+	querier := plugins.NewQuerier()
+	queries := map[string]plugins.WasmQuerierInterface{
+		plugins.WasmQueryRouteRank: rank.NewWasmQuerier(app.rankKeeper),
+	}
+	querier.Queriers = queries
+	queryPlugins := &wasm.QueryPlugins{
+		Custom: querier.QueryCustom,
+	}
+
 	var wasmRouter = baseApp.Router()
 	homeDir := viper.GetString(cli.HomeFlag)
 	wasmDir := filepath.Join(homeDir, "wasm")
@@ -263,7 +294,7 @@ func NewCyberdApp(logger log.Logger, db dbm.DB, traceStore io.Writer, loadLatest
 		wasmConfig,
 		supportedFeatures,
 		nil,
-		nil,
+		queryPlugins,
 	)
 
 	if len(enabledProposals) != 0 {
@@ -275,26 +306,6 @@ func NewCyberdApp(logger log.Logger, db dbm.DB, traceStore io.Writer, loadLatest
 		app.supplyKeeper, &stakingKeeper, govRouter,
 	)
 
-	app.stakingKeeper = *stakingKeeper.SetHooks(
-		staking.NewMultiStakingHooks(app.distrKeeper.Hooks(), app.slashingKeeper.Hooks()),
-	)
-	app.cyberbank = cyberbank.NewIndexedKeeper(
-		cyberbank.NewWrap(&app.bankKeeper, &stakingKeeper, app.supplyKeeper), app.accountKeeper,
-	)
-	app.energyKeeper = energy.NewKeeper(cdc, dbKeys.energy, app.supplyKeeper, app.cyberbank, app.accountKeeper, app.subspaces[energy.ModuleName])
-	app.cyberbank.SetEnergyKeeper(&app.energyKeeper)
-	app.cyberbank.Proxy.AddHook(bandwidth.CollectAddressesWithStakeChange())
-
-	app.bandwidthMeter = bandwidth.NewBandwidthMeter(
-		dbKeys.bandwidth, app.cyberbank, bandwidth.MsgBandwidthCosts, app.subspaces[bandwidth.ModuleName],
-	)
-	app.graphKeeper = link.NewKeeper(dbKeys.links)
-	app.indexKeeper = link.NewIndexKeeper(app.graphKeeper)
-	app.rankKeeper = rank.NewKeeper(
-		dbKeys.rank, app.subspaces[rank.ModuleName],
-		allowSearch, app.cyberbank, app.indexKeeper, app.graphKeeper, computeUnit,
-	)
-	app.cronKeeper = cron.NewKeeper(cdc, dbKeys.cron, app.wasmKeeper, app.supplyKeeper, app.cyberbank, app.accountKeeper, app.subspaces[cron.ModuleName])
 
 	app.mm = module.NewManager(
 		genutil.NewAppModule(app.accountKeeper, app.stakingKeeper, app.BaseApp.DeliverTx),
