@@ -263,10 +263,20 @@ func NewCyberdApp(logger log.Logger, db dbm.DB, traceStore io.Writer, loadLatest
 	querier := plugins.NewQuerier()
 	queries := map[string]plugins.WasmQuerierInterface{
 		plugins.WasmQueryRouteRank: rank.NewWasmQuerier(app.rankKeeper),
+		plugins.WasmQueryRouteLink: link.NewWasmQuerier(app.graphKeeper),
 	}
 	querier.Queriers = queries
 	queryPlugins := &wasm.QueryPlugins{
 		Custom: querier.QueryCustom,
+	}
+
+	parser := plugins.NewMsgParser()
+	parsers := map[string]plugins.WasmMsgParserInterface{
+		plugins.WasmMsgParserRouteLink: link.NewWasmMsgParser(),
+	}
+	parser.Parsers = parsers
+	customEncoders := &wasm.MessageEncoders{
+		Custom: parser.ParseCustom,
 	}
 
 	var wasmRouter = baseApp.Router()
@@ -293,7 +303,7 @@ func NewCyberdApp(logger log.Logger, db dbm.DB, traceStore io.Writer, loadLatest
 		wasmDir,
 		wasmConfig,
 		supportedFeatures,
-		nil,
+		customEncoders,
 		queryPlugins,
 	)
 

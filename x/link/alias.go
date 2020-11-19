@@ -3,6 +3,7 @@ package link
 import (
 	"github.com/cybercongress/go-cyber/x/link/keeper"
 	"github.com/cybercongress/go-cyber/x/link/types"
+	"github.com/cybercongress/go-cyber/x/link/wasm"
 )
 
 const (
@@ -16,6 +17,9 @@ var (
 	NewKeeper          = keeper.NewKeeper
 	NewIndexKeeper     = keeper.NewIndexKeeper
 	NewQuerier         = keeper.NewQuerier
+
+	NewWasmMsgParser   = wasm.NewWasmMsgParser
+	NewWasmQuerier     = wasm.NewWasmQuerier
 
 	NewMsgCyberlink	   = types.NewMsgCyberlink
 	RegisterCodec      = types.RegisterCodec
