@@ -218,7 +218,13 @@ func (s *StateKeeper) applyNextRank() {
 // GETTERS
 //
 
-func (s *StateKeeper) GetRankValues(number uint64) uint64 {
+func (s *StateKeeper) GetRankValueByNumber(number uint64) uint64 {
+	return s.networkCidRank.Values[number]
+}
+
+func (s *StateKeeper) GetRankValueByCid(ctx sdk.Context, cid string) uint64 {
+	// TODO check not exist case
+	number, _ := s.graphKeeper.GetCidNumber(ctx, link.Cid(cid))
 	return s.networkCidRank.Values[number]
 }
 

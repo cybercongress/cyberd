@@ -4,6 +4,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
 	"github.com/cybercongress/go-cyber/x/link"
+	"github.com/cybercongress/go-cyber/x/link/types"
 )
 
 type StakeKeeper interface {
@@ -25,4 +26,6 @@ type GraphIndexedKeeper interface {
 
 type GraphKeeper interface {
 	GetCidsCount(sdk.Context) uint64
+	GetCidNumber(ctx sdk.Context, cid types.Cid) (types.CidNumber, bool)
+	GetCid(ctx sdk.Context, num types.CidNumber) types.Cid
 }

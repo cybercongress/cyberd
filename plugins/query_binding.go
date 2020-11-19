@@ -8,6 +8,9 @@ import (
 	wasm "github.com/CosmWasm/wasmd/x/wasm"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+
+	"github.com/cybercongress/go-cyber/x/link"
+	"github.com/cybercongress/go-cyber/x/rank"
 )
 
 type WasmQuerierInterface interface {
@@ -31,8 +34,8 @@ type WasmCustomQuery struct {
 }
 
 const (
-	WasmQueryRouteLink     = "link"
-	WasmQueryRouteRank     = "rank"
+	WasmQueryRouteLink     = link.ModuleName
+	WasmQueryRouteRank     = rank.ModuleName
 )
 
 func (q Querier) QueryCustom(ctx sdk.Context, data json.RawMessage) ([]byte, error) {

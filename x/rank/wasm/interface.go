@@ -2,7 +2,6 @@ package wasm
 
 import (
 	"encoding/json"
-	"strconv"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
@@ -30,17 +29,20 @@ func NewWasmQuerier(keeper *keeper.StateKeeper) WasmQuerier {
 func (WasmQuerier) Query(_ sdk.Context, _ wasmTypes.QueryRequest) ([]byte, error) { return nil, nil }
 
 type CosmosQuery struct {
-	RankValue *QueryRankValueParams `json:"rank_value,omitempty"`
+	RankValueByID     *QueryRankValueByIdParams  `json:"rank_value_by_id,omitempty"`
+	RankValueByCid    *QueryRankValueByCidParams `json:"rank_value_by_cid,omitempty"`
 }
 
-// string used only to start work from
+type QueryRankValueByIdParams struct {
+	CidNumber uint64 `json:"cid_number"`
+}
 
-type QueryRankValueParams struct {
-	CidNumber string `json:"cid_number"`
+type QueryRankValueByCidParams struct {
+	Cid 	  string `json:"cid"`
 }
 
 type RankQueryResponse struct {
-	Rank string `json:"rank_value"`
+	Rank 	  uint64 `json:"rank_value"`
 }
 
 func (querier WasmQuerier) QueryCustom(ctx sdk.Context, data json.RawMessage) ([]byte, error) {
@@ -53,10 +55,12 @@ func (querier WasmQuerier) QueryCustom(ctx sdk.Context, data json.RawMessage) ([
 
 	var bz []byte
 
-	if query.RankValue != nil {
-		number, _ := strconv.ParseUint(query.RankValue.CidNumber, 10, 64)
-		rank := querier.keeper.GetRankValues(number)
-		bz, err = json.Marshal(RankQueryResponse{Rank: strconv.FormatUint(rank, 10)})
+	if query.RankValueByID != nil {
+		rank := querier.keeper.GetRankValueByNumber(query.RankValueByID.CidNumber)
+		bz, err = json.Marshal(RankQueryResponse{Rank: rank})
+	} else if query.RankValueByCid != nil {
+		rank := querier.keeper.GetRankValueByCid(ctx, query.RankValueByCid.Cid)
+		bz, err = json.Marshal(RankQueryResponse{Rank: rank})
 	} else {
 		return nil, sdkerrors.ErrInvalidRequest
 	}
