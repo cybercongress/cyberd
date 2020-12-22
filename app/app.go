@@ -424,7 +424,7 @@ func (app *CyberdApp) CheckTx(req abci.RequestCheckTx) (res abci.ResponseCheckTx
 	tx, acc, err := app.decodeTxAndAccount(ctx, req.GetTx())
 
 	if err != nil {
-		return sdkerrors.ResponseCheckTx(err, 0, 0)
+		return sdkerrors.ResponseCheckTx(err, 0, 0, false)
 	}
 
 	if err == nil {
@@ -447,7 +447,7 @@ func (app *CyberdApp) CheckTx(req abci.RequestCheckTx) (res abci.ResponseCheckTx
 		}
 	}
 
-	return sdkerrors.ResponseCheckTx(err, 0, 0)
+	return sdkerrors.ResponseCheckTx(err, 0, 0, false)
 }
 
 func (app *CyberdApp) DeliverTx(req abci.RequestDeliverTx) (res abci.ResponseDeliverTx) {
@@ -456,7 +456,7 @@ func (app *CyberdApp) DeliverTx(req abci.RequestDeliverTx) (res abci.ResponseDel
 	tx, acc, err := app.decodeTxAndAccount(ctx, req.GetTx())
 
 	if err != nil {
-		return sdkerrors.ResponseDeliverTx(err, 0, 0)
+		return sdkerrors.ResponseDeliverTx(err, 0, 0, false)
 	}
 
 	if err == nil {
@@ -490,7 +490,7 @@ func (app *CyberdApp) DeliverTx(req abci.RequestDeliverTx) (res abci.ResponseDel
 		}
 	}
 
-	return sdkerrors.ResponseDeliverTx(err, 0, 0)
+	return sdkerrors.ResponseDeliverTx(err, 0, 0, false)
 }
 
 func (app *CyberdApp) decodeTxAndAccount(ctx sdk.Context, txBytes []byte) (auth.StdTx, sdk.AccAddress, error) {

@@ -93,6 +93,11 @@ func newApp(logger log.Logger, db dbm.DB, traceStore io.Writer) abci.Application
 		cache = store.NewCommitKVStoreCacheManager()
 	}
 
+	pruningOpts, err := server.GetPruningOptionsFromFlags()
+	if err != nil {
+		panic(err)
+	}
+
 	skipUpgradeHeights := make(map[int64]bool)
 	for _, h := range viper.GetIntSlice(server.FlagUnsafeSkipUpgrades) {
 		skipUpgradeHeights[int64(h)] = true
@@ -106,7 +111,7 @@ func newApp(logger log.Logger, db dbm.DB, traceStore io.Writer) abci.Application
 	cyberdApp := app.NewCyberdApp(
 		logger, db, traceStore, true, invCheckPeriod, skipUpgradeHeights,
 		computeUnit, searchEnabled,
-		baseapp.SetPruning(store.PruneNothing),
+		baseapp.SetPruning(pruningOpts),
 		baseapp.SetMinGasPrices(viper.GetString(server.FlagMinGasPrices)),
 		baseapp.SetHaltHeight(viper.GetUint64(server.FlagHaltHeight)),
 		baseapp.SetHaltTime(viper.GetUint64(server.FlagHaltTime)),

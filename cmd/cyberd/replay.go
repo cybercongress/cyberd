@@ -103,7 +103,7 @@ func replayTxs(rootDir string) error {
 	gapp := app.NewCyberdApp(
 		ctx.Logger, appDB, traceStoreWriter, true, uint(1), map[int64]bool{},
 		computeUnit, searchEnabled,
-		baseapp.SetPruning(store.PruneNothing), // nothing
+		baseapp.SetPruning(store.PruningOptions{100,100,10}), // nothing
 	)
 
 	// Genesis
