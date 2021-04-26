@@ -21,7 +21,7 @@ Recommended requirements:
 ```js
 CPU: 6 cores
 RAM: 32 GB
-SSD: 256 GB
+SSD: 512 GB
 Connection: 100Mb, Fiber, Stable and low-latency connection
 GPU: Nvidia GeForce(or Tesla/Titan/Quadro) with CUDA-cores; at least 6gb of memory*
 Software: Ubuntu 18.04 LTS
@@ -275,7 +275,7 @@ If you are getting an error about the `libgo_cosmwasm.so` library missing, pleas
 ```bash
 wget https://github.com/CosmWasm/go-cosmwasm/archive/v0.7.2.tar.gz
 tar -xzf v0.7.2.tar.gz
-cd go-cosmwasm-0.7.2/
+cd wasmvm-0.7.2/
 make build
 cp ./api/libgo_cosmwasm.so /usr/lib/
 cp ./api/libgo_cosmwasm.dylib /usr/lib/
@@ -354,11 +354,14 @@ cd $DAEMON_HOME/config
 wget -O genesis.json https://ipfs.io/ipfs/QmZHpLc3H5RMXp3Z4LURNpKgNfXd3NZ8pZLYbjNFPL6T5n
 ```
 
-Setup private peers in `config.toml`.
+Setup seed and private peers in `config.toml`.
 
 ```bash
+# Comma separated list of seed nodes to connect to
+seeds = "a61cccbe3a76cb202b11378dcd318d7adf7719e1@185.186.208.36:36656"
+
 # Comma separated list of nodes to keep persistent connections to
-persistent_peers = "d0518ce9881a4b0c5872e5e9b7c4ea8d760dad3f@85.10.207.173:26656,0f7d8d5bb8e831a67d29d5950cff0f0ecafbab54@195.201.105.229:36656,30d949f592baf210dd2fc500c83f087f7ce95a84@86.57.254.202:36656"
+persistent_peers = "91fe64176469cca262aee6fbfb52ed28072dacad@185.186.208.37:26656,416aa82d0ab4c0fc379426fcedadc947d84afc50@86.57.138.169:26656,469ff77f6351e4587249e9485b0ede8f44142684@86.57.254.202:37656,95f304771b2552fab7f92615739db21bb9a69968@188.214.129.85:26656,e3d035f200b75b1cfcd07205391014e28766ac83@188.214.129.80:26656,918c4509761f146cbe1b315fa7f4f61576e31014@85.10.204.155:26656,9c966ec241024cd9dbdd6a7f4b99d4bd6bc1e606@193.106.93.110:26656,c287cd25d62d5332a37dfdc11ec9a10c12398625@14.52.147.51:30756,d0518ce9881a4b0c5872e5e9b7c4ea8d760dad3f@85.10.207.173:26656,30d949f592baf210dd2fc500c83f087f7ce95a84@86.57.254.202:36656,737a1d79b82a7ae88e9adf34b6e4dc6e7b46f80f@176.9.0.254:26656"
 ```
 
 You can more of them on our [forum](https://ai.cybercongress.ai/t/euler-6-testnet-faq/65), the more the better for now.
