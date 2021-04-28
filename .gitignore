@@ -21,3 +21,5 @@ genesis.json
 links
 /cyberd
 /cyberdcli
+
+*.wasm

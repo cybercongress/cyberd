@@ -22,6 +22,7 @@ var (
 	NewLink       	   = types.NewLink
 
 	ErrCidNotFound 	   = types.ErrCidNotFound
+	ErrInvalidCid	   = types.ErrInvalidCid
 )
 
 type (

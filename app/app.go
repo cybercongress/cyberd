@@ -40,6 +40,7 @@ import (
 
 	"github.com/cybercongress/go-cyber/util"
 	bandwidth "github.com/cybercongress/go-cyber/x/bandwidth"
+	"github.com/cybercongress/go-cyber/x/cron"
 	cyberbank "github.com/cybercongress/go-cyber/x/cyberbank"
 	"github.com/cybercongress/go-cyber/x/energy"
 	link "github.com/cybercongress/go-cyber/x/link"
@@ -99,6 +100,7 @@ var (
 		bandwidth.AppModuleBasic{},
 		rank.AppModuleBasic{},
 		energy.AppModuleBasic{},
+		cron.AppModuleBasic{},
 		wasm.AppModuleBasic{},
 	)
 
@@ -143,6 +145,7 @@ type CyberdApp struct {
 	indexKeeper        *link.IndexKeeper
 	rankKeeper    	   *rank.StateKeeper
 	energyKeeper       energy.Keeper
+	cronKeeper 		   cron.Keeper
 	wasmKeeper     	   wasm.Keeper
 
 	latestBlockHeight int64
@@ -189,6 +192,7 @@ func NewCyberdApp(logger log.Logger, db dbm.DB, traceStore io.Writer, loadLatest
 	app.subspaces[bandwidth.ModuleName] = app.paramsKeeper.Subspace(bandwidth.DefaultParamspace)
 	app.subspaces[rank.ModuleName] = app.paramsKeeper.Subspace(rank.DefaultParamspace)
 	app.subspaces[energy.ModuleName] = app.paramsKeeper.Subspace(energy.DefaultParamspace)
+	app.subspaces[cron.ModuleName] = app.paramsKeeper.Subspace(cron.DefaultParamspace)
 	app.subspaces[wasm.ModuleName] = app.paramsKeeper.Subspace(wasm.DefaultParamspace)
 
 	app.accountKeeper = auth.NewAccountKeeper(
@@ -290,6 +294,7 @@ func NewCyberdApp(logger log.Logger, db dbm.DB, traceStore io.Writer, loadLatest
 		dbKeys.rank, app.subspaces[rank.ModuleName],
 		allowSearch, app.cyberbank, app.indexKeeper, app.graphKeeper, computeUnit,
 	)
+	app.cronKeeper = cron.NewKeeper(cdc, dbKeys.cron, app.wasmKeeper, app.supplyKeeper, app.cyberbank, app.accountKeeper, app.subspaces[cron.ModuleName])
 
 	app.mm = module.NewManager(
 		genutil.NewAppModule(app.accountKeeper, app.stakingKeeper, app.BaseApp.DeliverTx),
@@ -310,6 +315,7 @@ func NewCyberdApp(logger log.Logger, db dbm.DB, traceStore io.Writer, loadLatest
 		link.NewAppModule(app.graphKeeper, app.indexKeeper, app.accountKeeper),
 		rank.NewAppModule(app.rankKeeper),
 		energy.NewAppModule(app.energyKeeper),
+		cron.NewAppModule(app.cronKeeper),
 		wasm.NewAppModule(app.wasmKeeper),
 	)
 
@@ -318,12 +324,13 @@ func NewCyberdApp(logger log.Logger, db dbm.DB, traceStore io.Writer, loadLatest
 		evidence.ModuleName, staking.ModuleName,
 	)
 	app.mm.SetOrderEndBlockers(crisis.ModuleName, gov.ModuleName, staking.ModuleName,
-		cyberbank.ModuleName, bandwidth.ModuleName, rank.ModuleName)
+		cyberbank.ModuleName, bandwidth.ModuleName, rank.ModuleName, cron.ModuleName)
 
 	app.mm.SetOrderInitGenesis(
 		distr.ModuleName, staking.ModuleName, auth.ModuleName, bank.ModuleName,
-		slashing.ModuleName, gov.ModuleName, mint.ModuleName, supply.ModuleName, crisis.ModuleName, bandwidth.ModuleName,
-		genutil.ModuleName, cyberbank.ModuleName, rank.ModuleName, evidence.ModuleName, wasm.ModuleName, energy.ModuleName,
+		slashing.ModuleName, gov.ModuleName, mint.ModuleName, supply.ModuleName, crisis.ModuleName,
+		bandwidth.ModuleName, genutil.ModuleName, cyberbank.ModuleName, rank.ModuleName,
+		evidence.ModuleName, wasm.ModuleName, energy.ModuleName, cron.ModuleName,
 	)
 
 	app.mm.RegisterInvariants(&app.crisisKeeper)
@@ -333,7 +340,8 @@ func NewCyberdApp(logger log.Logger, db dbm.DB, traceStore io.Writer, loadLatest
 		dbKeys.main, dbKeys.auth, dbKeys.links,
 		dbKeys.rank, dbKeys.stake, dbKeys.slashing, dbKeys.gov, dbKeys.params,
 		dbKeys.distr, dbKeys.bandwidth, dbKeys.tParams,
-		dbKeys.tStake, dbKeys.mint, dbKeys.supply, dbKeys.upgrade, dbKeys.evidence, dbKeys.wasm, dbKeys.energy,
+		dbKeys.tStake, dbKeys.mint, dbKeys.supply, dbKeys.upgrade, dbKeys.evidence,
+		dbKeys.wasm, dbKeys.energy, dbKeys.cron,
 	)
 
 	app.SetInitChainer(app.InitChainer)
