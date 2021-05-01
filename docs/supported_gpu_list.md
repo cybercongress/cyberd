@@ -26,6 +26,8 @@ In our `cyber protocol` implementation on `GO` proof of relevance root hash is c
 |[GeForce GTX TITAN Z](https://www.geforce.com/hardware/desktop-gpus/geforce-gtx-titan-z/specifications)|:white_check_mark:|:x:|5760|12 GB GDDR5|2014|
 |[GeForce GTX TITAN Black](https://www.geforce.com/hardware/desktop-gpus/geforce-gtx-titan-black/specifications)|:white_check_mark:|:x:|2880|6 GB GDDR5|2014|
 |[GeForce GTX 770](https://www.geforce.com/hardware/desktop-gpus/geforce-gtx-770/specifications)|:white_check_mark:|:x:|1536|4 GB GDDR5|2013|
+|[GEFORCE RTX 5000](https://www.nvidia.com/en-us/design-visualization/quadro/rtx-4000/)|:white_check_mark:|:white_check_mark:|3072|16 GB GDDR6|2018|
+|[GEFORCE RTX 4000](https://www.nvidia.com/en-us/design-visualization/quadro/rtx-4000/)|:white_check_mark:|:white_check_mark:|2304|8 GB GDDR6|2018|
 
 If you have used some GPU from `column` supported but without :white_check_mark: at `tested` column please submit a pull request with corrections. If you have tested GPU and it's not contained in that list submit PR too.
 
