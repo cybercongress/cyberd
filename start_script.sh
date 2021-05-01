@@ -14,8 +14,10 @@ else
   ALLOW_SEARCH_FLAG="${ALLOW_SEARCH}"
 fi
 
+#export $(cat /.env) &
+ulimit -n 4096 &
 # Start the first process
-cyberd start --compute-rank-on-gpu=${COMPUTE_GPU} --allow-search=${ALLOW_SEARCH_FLAG} &
+/root/.cyberd/cosmosd start --compute-rank-on-gpu=${COMPUTE_GPU} --allow-search=${ALLOW_SEARCH_FLAG} --home /root/.cyberd  &
 #status=$?
 #if [ $status -ne 0 ]; then
 #  echo "Failed to start cyberd: $status"
